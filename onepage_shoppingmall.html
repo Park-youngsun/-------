@@ -18,9 +18,76 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
     <script>
-      function hey(){
-          alert('우왕 기다리고 있을게요!')
+
+    $(document).ready(function() {
+      listing();
+    });
+
+    function posting() {
+      let name= $('#name').val();
+      let count = $('#count').val();
+      let address = $('#address').val();
+      let phone = $('#phone').val();
+      let item = $('#item').val();
+      
+      $.ajax({
+          type: "POST",
+           url: "http://spartacodingclub.shop/order", 
+            data: {name_give: name, count_give: count, address_give: address, phone_give: phone, item_give: item}, 
+      success: function(response){ 
+        if (response['result'] == 'success') {
+          alert ('신청 완료!');
+          window.location.reload();
+        }
+        console.log(result);
       }
+    })
+  }
+
+      function listing() {
+        $.ajax({
+       type: "GET",
+       url: "http://spartacodingclub.shop/order"
+        data: { },
+        success: function(response){
+      if (response['result'] == 'success') {
+        let item_give = response['item_give']
+        for (let i = 0; i < item_give.length ; i++){
+
+          make_list(articles[i]['url'], articles[i]['image'], articles[i]['title'], articles[i]['desc'], articles[i]['comment'])
+        }
+      }
+  }
+})
+      }
+      function make_list(name_give, count_give, address_give, phone_give) { 
+        let temp_html = '<table class="table">\
+              <thead>\
+     <tr>\
+      <th scope="col">#</th>\
+      <th scope="col">이름</th>\
+      <th scope="col">수량</th>\
+      <th scope="col">주소</th>\
+      <th scope="col">휴대전화 번호</th>\
+    </tr>\
+    </thead>\
+      <tbody>\
+    <tr>\
+      <th scope="row">1</th>\
+      <td>'+name_give+'</td>\
+      <td>'+count_give+'</td>\
+      <td>'+address_give+'</td>\
+      <td>'+phone_give+'</td>\
+    </tr>\
+  </tbody>\
+</table>';
+
+
+
+      $('#list-box').append(temp_html)     
+
+    }
+
     </script>
 
     <style>
@@ -36,6 +103,13 @@
     .wrapper {
     text-align: center;
     }
+
+    .table {
+      width:50rem;
+      margin:auto;
+      border-radius:1rem;
+    }
+
     .button {
     position: absolute;
     top: 50%;
@@ -90,20 +164,20 @@
     </div>
     <div class="input-group mb-3">
       <div class="input-group-prepend">
-      <span class="input-group-text" id="basic-addon1">신청자 성함</span>
+      <span id="name" class="input-group-text" id="basic-addon1">신청자 성함</span>
       </div>
        <input type="text" class="form-control" placeholder="반가워요!" aria-label="Username" aria-describedby="basic-addon1">
     </div>
 
     <div class="input-group mb-3">
       <div class="input-group-prepend">
-      <span class="input-group-text" id="basic-addon1">신청자 주소</span>
+      <span class="input-group-text" id="address">신청자 주소</span>
       </div>
        <input type="text" class="form-control" placeholder="가장 편리한 교통편을 알려드리고 싶어서요." aria-label="Username" aria-describedby="basic-addon1">
     </div>
     
     <div class="input-group mb-3">
-      <select class="custom-select" id="inputGroupSelect04">
+      <select class="custom-select" id="count">
         <option selected>일행이 있으신가요?</option>
         <option value="1">혼자 갈게요</option>
         <option value="2">둘이 갈게요</option>
@@ -123,15 +197,47 @@
 
     <div class="input-group mb-3">
       <div class="input-group-prepend">
-      <span class="input-group-text" id="basic-addon1">휴대전화 번호</span>
+      <span class="input-group-text" id="phone">휴대전화 번호</span>
       </div>
        <input type="text" class="form-control" placeholder="위에 적어주신 내용을 바탕으로 꼭 필요한 정보를 문자로 보내드릴게요!" aria-label="Username" aria-describedby="basic-addon1">
     </div>
     <br/>
 
     <div class="wrapper">
-    <button onclick="hey()" type="button" class="btn btn-primary button-center">신청하기</button>
+    <button onclick="posting()" type="button" class="btn btn-primary button-center">신청하기</button>
     </div>
+
+    <p>
+    </p>
+    <p>
+    </p>
+    <p>
+    </p>
+
+    <table id="list-box" class="table">
+     <thead>
+     <tr>
+      <th scope="col">#</th>
+      <th scope="col">이름</th>
+      <th scope="col">수량</th>
+      <th scope="col">주소</th>
+      <th scope="col">휴대전화 번호</th>
+      <th scope="col">상품명</th>
+    </tr>
+    </thead>
+      <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>손소니</td>
+      <td>혼자</td>
+      <td> 서울시 마포구</td>
+      <td>010-0000-0000</td>
+      <td>룰리룰리룰룰루</td>
+    </tr>
+  </tbody>
+</table>
+
+
     <br/><br/><br/>
   </body>
 </html>
